@@ -17,21 +17,36 @@ WORKDIR /project
 # 指定 Android SDK 的路径
 ENV ANDROID_HOME /project/sdk
 
-RUN apt-get update -y && apt-get install -y bash git wget openssh-client && rm -rf /var/lib/apt/lists/*
+RUN chmod 777  /etc/apt/sources.list && rm /etc/apt/sources.list
+RUN echo 'deb http://mirrors.aliyun.com/ubuntu/ xenial main restricted universe multiverse \n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted universe multiverse \n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted universe multiverse \n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial-proposed main restricted universe multiverse \n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse \n\
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial main restricted universe multiverse \n\
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted universe multivers \n\
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted universe multiverse \n\
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-proposed main restricted universe multiverse \n\
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse' > /etc/apt/sources.list
 
-# RUN 用于在容器中执行命令
-# 安装 Android SDK 和后续构建所需的工具
-RUN mkdir sdk && \
-    wget https://dl.google.com/android/repository/sdk-tools-linux-${SDK_TOOLS_VERSION}.zip && \
-    unzip -qd sdk sdk-tools-linux-${SDK_TOOLS_VERSION}.zip && \
-    rm -f sdk-tools-linux-${SDK_TOOLS_VERSION}.zip
+RUN cat /etc/apt/sources.list
 
-RUN (yes | ./sdk/tools/bin/sdkmanager --no_https --update) && \
-    (yes | ./sdk/tools/bin/sdkmanager --no_https "build-tools;${BUILD_TOOLS_VERSION}") && \
-    (yes | ./sdk/tools/bin/sdkmanager --no_https "platform-tools") && \
-    (yes | ./sdk/tools/bin/sdkmanager --no_https "platforms;android-${COMPILE_SDK_VERSION}") && \
-    (yes | ./sdk/tools/bin/sdkmanager --no_https "extras;google;m2repository") && \
-    (yes | ./sdk/tools/bin/sdkmanager --no_https "extras;android;m2repository") && \
-    (yes | ./sdk/tools/bin/sdkmanager --no_https "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2") && \
-    (yes | ./sdk/tools/bin/sdkmanager --no_https "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2")
+RUN apt-get update -y && apt-get install -y bash wget unzip openjdk-8-jdk-headless && rm -rf /var/lib/apt/lists/*
+# # RUN apt-get install -y bash git wget openssh-client && rm -rf /var/lib/apt/lists/*
+
+# # RUN 用于在容器中执行命令
+# # 安装 Android SDK 和后续构建所需的工具
+# RUN mkdir sdk && \
+#     wget https://dl.google.com/android/repository/sdk-tools-linux-${SDK_TOOLS_VERSION}.zip && \
+#     unzip -qd sdk sdk-tools-linux-${SDK_TOOLS_VERSION}.zip && \
+#     rm -f sdk-tools-linux-${SDK_TOOLS_VERSION}.zip
+
+# RUN (yes | ./sdk/tools/bin/sdkmanager --no_https --update) && \
+#     (yes | ./sdk/tools/bin/sdkmanager --no_https "build-tools;${BUILD_TOOLS_VERSION}") && \
+#     (yes | ./sdk/tools/bin/sdkmanager --no_https "platform-tools") && \
+#     (yes | ./sdk/tools/bin/sdkmanager --no_https "platforms;android-${COMPILE_SDK_VERSION}") && \
+#     (yes | ./sdk/tools/bin/sdkmanager --no_https "extras;google;m2repository") && \
+#     (yes | ./sdk/tools/bin/sdkmanager --no_https "extras;android;m2repository") && \
+#     (yes | ./sdk/tools/bin/sdkmanager --no_https "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2") && \
+#     (yes | ./sdk/tools/bin/sdkmanager --no_https "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2")
 
