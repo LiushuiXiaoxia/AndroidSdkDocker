@@ -23,7 +23,7 @@ COPY ./sources.list /etc/apt/sources.list
 
 # 安装必要工具
 RUN apt-get update --fix-missing
-RUN apt-get install -y wget unzip openssh-client gradle maven git
+RUN apt-get install -y wget unzip openssh-client maven git
 RUN rm -rf /var/lib/apt/lists/*
 
 # # RUN apt-get install -y bash git wget openssh-client && rm -rf /var/lib/apt/lists/*
